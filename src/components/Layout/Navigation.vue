@@ -1,5 +1,10 @@
 <template>
-    <el-menu :default-active="active"  active-text-color="#FF5F00" class="navigation" @select="handleSelect">
+    <el-menu
+        :default-active="active"
+        active-text-color="#FF5F00"
+        class="navigation"
+        @select="handleSelect"
+    >
         <el-menu-item v-for="menu in menus" :index="menu.name" :key="menu.name">
             <template slot="title">
                 <i :class="menu.meta.icon"></i>
@@ -14,10 +19,10 @@
  * @author 顾超<beyondc@foxmail.com>
  */
 // 数据
-import {menus} from '@/router'
+import { menus } from '@/router'
 export default {
     name: 'Navigation',
-    data () {
+    data() {
         return {
             active: 'home',
             menus
@@ -25,7 +30,7 @@ export default {
     },
     methods: {
         handleSelect(index) {
-            this.$router.push({name: index})
+            this.$router.push({ name: index })
         }
     }
 }

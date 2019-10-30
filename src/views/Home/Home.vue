@@ -1,7 +1,5 @@
 <template>
-    <card>
-        首页
-    </card>
+    <card>首页</card>
 </template>
 <script>
 /**

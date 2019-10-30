@@ -1,4 +1,4 @@
-import Vue from "vue";
+import Vue from 'vue'
 import {
 	Button,
 	Container,
@@ -6,33 +6,43 @@ import {
 	Aside,
 	Main,
 	Menu,
-    MenuItem,
-    Pagination,
-    Table,
-    TableColumn,
+	MenuItem,
+	Pagination,
+	Table,
+	TableColumn,
 	Form,
 	FormItem,
 	Image,
 	Input,
 	Select,
 	Option,
-	Upload
-} from "element-ui";
+	Upload,
+	MessageBox,
+	Message
+} from 'element-ui'
 
-Vue.use(Button);
-Vue.use(Container);
-Vue.use(Header);
-Vue.use(Aside);
-Vue.use(Main);
-Vue.use(Menu);
-Vue.use(MenuItem);
-Vue.use(Pagination);
-Vue.use(Table);
-Vue.use(TableColumn);
-Vue.use(Form);
-Vue.use(FormItem);
-Vue.use(Image);
-Vue.use(Input);
-Vue.use(Select);
-Vue.use(Option);
-Vue.use(Upload);
+Vue.use(Button)
+Vue.use(Container)
+Vue.use(Header)
+Vue.use(Aside)
+Vue.use(Main)
+Vue.use(Menu)
+Vue.use(MenuItem)
+Vue.use(Pagination)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.use(Image)
+Vue.use(Input)
+Vue.use(Select)
+Vue.use(Option)
+Vue.use(Upload)
+// Vue.use(MessageBox);
+// Vue.use(Message);
+
+Vue.prototype.$msgbox = MessageBox
+Vue.prototype.$alert = MessageBox.alert
+Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$prompt = MessageBox.prompt
+Vue.prototype.$message = Message
