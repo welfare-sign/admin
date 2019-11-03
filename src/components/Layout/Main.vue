@@ -2,7 +2,7 @@
     <el-container class="layout">
         <el-aside width="200px">
             <div class="logo">
-                <h1>福利签</h1>
+                <h1>福力签</h1>
             </div>
             <navigation />
         </el-aside>

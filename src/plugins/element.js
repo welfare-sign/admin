@@ -18,7 +18,11 @@ import {
 	Option,
 	Upload,
 	MessageBox,
-	Message
+	Message,
+	Dialog,
+	Checkbox,
+	CheckboxButton,
+	CheckboxGroup,
 } from 'element-ui'
 
 Vue.use(Button)
@@ -38,6 +42,10 @@ Vue.use(Input)
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(Upload)
+Vue.use(Dialog)
+Vue.use(Checkbox)
+Vue.use(CheckboxButton)
+Vue.use(CheckboxGroup)
 // Vue.use(MessageBox);
 // Vue.use(Message);
 

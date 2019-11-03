@@ -7,6 +7,7 @@ export function login(data) {
 	/**
 	 * @description 密码登录接口
 	 * @return (promise)
+     * 
 	 * @data (object):
 	 *  @name (string): 用户名
 	 *  @password (string): 密码

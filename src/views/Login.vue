@@ -1,7 +1,7 @@
 <template>
     <div class="login">
         <el-form class="login-form" ref="login" :model="datas" :rules="rules" label-width="80px">
-            <h1>福利签登录</h1>
+            <h1>福力签登录</h1>
             <el-form-item label="用户名" prop="name">
                 <el-input v-model="datas.name"></el-input>
             </el-form-item>
@@ -19,6 +19,9 @@
  * @description 登录页
  * @author 顾超<beyondc@foxmail.com>
  */
+// 依赖
+import Cookies from 'js-cookie'
+// 接口
 import { login } from '@/api/login'
 export default {
     name: 'Login',
@@ -53,8 +56,15 @@ export default {
              * @return (void)
              */
             this.validateForm().then(() => {
-                login(this.datas).then(res => {
-                    //    TODO
+                login(this.datas).then(({data, res}) => {
+                    if (res.code === 'SUCCESS') {
+                        Cookies.set('Authorization', data)
+                        this.$router.push('/')
+                    } else {
+                        if (res.code === 'ERR_LOGIN') {
+                            return
+                        }
+                    }
                 })
             })
         },
@@ -63,15 +73,18 @@ export default {
              * @desciption 表单校验方法
              * @return (promise | void)
              */
-            this.$refs.login.validate(valid => {
-                if (valid) {
-                    return Promise.resolve()
-                } else {
-                    this.$message({
-                        type: 'error',
-                        message: '表检查你的输入'
-                    })
-                }
+            return new Promise((resolve, reject) => {
+                this.$refs.login.validate(valid => {
+                    if (valid) {
+                        resolve()
+                    } else {
+                        this.$message({
+                            type: 'error',
+                            message: '表检查你的输入'
+                        })
+                        reject()
+                    }
+                })
             })
         }
     }
