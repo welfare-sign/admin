@@ -49,7 +49,11 @@
     },
     "rules": {
       "no-debugger": 0,
-      "no-unused-vars": 1
+      "no-unused-vars": 1,
+      "no-console": 1
+    },
+    "globals": {
+      "AMap": false
     }
   },
   "postcss": {

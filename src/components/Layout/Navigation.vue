@@ -24,7 +24,7 @@ export default {
     name: 'Navigation',
     data() {
         return {
-            active: 'home',
+            active: this.$route.name,
             menus
         }
     },

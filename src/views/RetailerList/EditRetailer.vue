@@ -1,42 +1,68 @@
 <template>
     <div class="edit-retailer">
         <el-button :type="btnType" :size="btnSize" @click="handleClick">{{btnTitle}}</el-button>
-        <el-dialog :title="title" :visible.sync="show" width="650px">
-            <el-form ref="retailerForm" :model="retailerForm" :inline="false" label-position="left" label-width="120px">
+        <el-dialog :title="title" :visible.sync="show" @closed="handleClosed" width="650px">
+            <el-form
+                ref="retailerForm"
+                :rules="rules"
+                :model="retailerForm"
+                :inline="false"
+                label-position="left"
+                label-width="100px"
+            >
                 <section>
                     <h2>商户信息</h2>
-                    <el-form-item label="商户名称">
-                        <el-input v-model="retailerForm.contact_name"></el-input>
+                    <el-form-item label="商户名称" prop="store_name">
+                        <el-input v-model="retailerForm.store_name" placeholder="请输入商户名称"></el-input>
                     </el-form-item>
-                    <el-form-item label="商户地址">
-                        <el-input></el-input>
+                    <el-form-item label="联系人" prop="contact_name">
+                        <el-input v-model="retailerForm.contact_name" placeholder="请输入联系人姓名"></el-input>
                     </el-form-item>
-                    <el-form-item label="餐饮类型">
-                        <el-select v-model="catering_type">
-                            <el-option v-for="item in typeList" :key="item.code" :label="item.label" :value="item.code"></el-option>
+                    <el-form-item label="联系人电话" prop="contact_phone">
+                        <el-input v-model="retailerForm.contact_phone" placeholder="请输入联系人电话"></el-input>
+                    </el-form-item>
+                    <el-form-item label="商户地址" prop="address">
+                        <el-autocomplete
+                            v-model="address"
+                            :fetch-suggestions="querySearch"
+                            value-key="address"
+                            placeholder="请输入地址"
+                            @select="handleSelect"
+                        ></el-autocomplete>
+                        <!-- <el-input v-model="address"></el-input> -->
+                    </el-form-item>
+                    <el-form-item label="餐饮类型" prop="catering_type">
+                        <el-select v-model="retailerForm.catering_type">
+                            <el-option
+                                v-for="item in typeList"
+                                :key="item.code"
+                                :label="item.label"
+                                :value="item.code"
+                            ></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="商户头像">
+                    <el-form-item label="商户头像" prop="store_avatar">
                         <el-upload
+                            :class="{'upload-disabled': store_avatar}"
                             :action="uploadUrl+'&type=avatar'"
                             :multiple="false"
                             list-type="picture-card"
                             :on-success="handleAvatarSuccess"
                             :on-preview="handlePictureCardPreview"
                             :on-remove="handleAvatarRemove"
-                            :disabled="store_avatar"
                         >
                             <i class="el-icon-plus"></i>
                         </el-upload>
                     </el-form-item>
-                    <el-form-item label="商户海报">
+                    <el-form-item label="商户海报" prop="poster">
                         <el-upload
+                            :class="{'upload-disabled': poster}"
                             :action="uploadUrl+'&type=poster'"
                             :multiple="false"
                             list-type="picture-card"
+                            :on-success="handlePosterSuccess"
                             :on-preview="handlePictureCardPreview"
-                            :on-remove="handleRemove"
-                            :disabled="poster"
+                            :on-remove="handlePosterRemove"
                         >
                             <i class="el-icon-plus"></i>
                         </el-upload>
@@ -45,19 +71,27 @@
                 <section>
                     <h2>活动信息</h2>
                     <el-form-item label="参与活动">
-                        <el-checkbox-group>
-                            <el-checkbox></el-checkbox>
-                        </el-checkbox-group>
+                        <!-- <el-checkbox-group v-model="salesList[0].code">
+                            <el-checkbox v-for="item in salesList" :key="item.code" :label="item.code">{{item.label}}</el-checkbox>
+                        </el-checkbox-group>-->
+                        <el-checkbox label="beer" checked readonly>30瓶啤酒</el-checkbox>
                     </el-form-item>
-                    <el-form-item label="赠送份数">
-                        <el-input></el-input>
+                    <el-form-item label="赠送份数" prop="total_receive">
+                        <div>
+                            <label>30瓶啤酒：</label>
+                            <!-- <el-input-number v-model="retailerForm.total_receive"></el-input-number> -->
+                            <el-input v-model="total_receive" type="number" placeholder="输入赠送份数"></el-input>
+                        </div>
                     </el-form-item>
                 </section>
             </el-form>
             <footer slot="footer">
-                <el-button type="primary">确认</el-button>
-                <el-button>取消</el-button>
+                <el-button type="primary" @click="handleSubmit">确认</el-button>
+                <el-button @click="handleCancel">取消</el-button>
             </footer>
+            <el-dialog :visible.sync="previewImg" append-to-body>
+                <img width="100%" :src="dialogImageUrl" alt />
+            </el-dialog>
         </el-dialog>
     </div>
 </template>
@@ -69,15 +103,19 @@
 // 依赖
 import Cookies from 'js-cookie'
 
+// 接口
+import { addMerchant } from '@/api/merchants'
+
 // 常量
 const baseUrl = process.env.VUE_APP_API || ''
 const access_token = Cookies.get('Authorization')
+
 export default {
     name: 'EditRetailer',
     props: {
         editInfo: {
             type: Object,
-            default () {
+            default() {
                 return {}
             }
         },
@@ -99,6 +137,14 @@ export default {
         }
     },
     data() {
+        const checkPhone = (rule, value, callback) => {
+            const regx = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/
+            if (!regx.test(value)) {
+                callback(new Error('请输入正确的手机号'))
+            } else {
+                callback()
+            }
+        }
         return {
             show: false,
             uploadUrl: `${baseUrl}v1/files/upload?access_token=${access_token}`,
@@ -108,6 +154,44 @@ export default {
                     label: '烧烤'
                 }
             ],
+            rules: {
+                address: [
+                    {
+                        required: true,
+                        message: '请提供准确的地址',
+                        trigger: 'blur'
+                    }
+                ],
+                contact_phone: [
+                    {
+                        required: true,
+                        message: '请提供联系人手机号',
+                        trigger: 'blur'
+                    },
+                    { validator: checkPhone, trigger: 'blur' }
+                ],
+                store_avatar: [
+                    {
+                        required: true,
+                        message: '请提供商家的形象logo',
+                        trigger: 'change'
+                    }
+                ],
+                store_name: [
+                    {
+                        required: true,
+                        message: '请输入商家的店名',
+                        trigger: 'blur'
+                    }
+                ],
+                total_receive: [
+                    {
+                        required: true,
+                        message: '请提供可领取的礼品数',
+                        trigger: 'blur'
+                    }
+                ]
+            },
             retailerForm: {
                 address: this.editInfo.address || '',
                 catering_type: this.editInfo.catering_type || '',
@@ -121,13 +205,19 @@ export default {
                 received: this.editInfo.received || '',
                 store_avatar: this.editInfo.store_avatar || '',
                 store_name: this.editInfo.store_name || '',
-                total_receive: this.editInfo.total_receive || ''
-            }
+                total_receive: this.editInfo.total_receive || 0
+            },
+            placeSearch: null,
+            previewImg: false,
+            dialogImageUrl: ''
         }
+    },
+    created() {
+        this.initAMap()
     },
     computed: {
         store_avatar: {
-            get () {
+            get() {
                 return this.retailerForm.store_avatar
             },
             set(value) {
@@ -135,15 +225,69 @@ export default {
             }
         },
         poster: {
-            get () {
+            get() {
                 return this.retailerForm.poster
             },
-            set (value) {
+            set(value) {
                 this.retailerForm.poster = value
+            }
+        },
+        address: {
+            get() {
+                return this.retailerForm.address
+            },
+            set(value) {
+                if (typeof value === 'string') {
+                    this.retailerForm.address = value
+                } else {
+                    // this.retailerForm.address = value.address
+                    this.retailerForm.lat = value.location.lat
+                    this.retailerForm.lon = value.location.lng
+                }
+            }
+        },
+        total_receive: {
+            get() {
+                return +this.retailerForm.total_receive
+            },
+            set(value) {
+                this.retailerForm.total_receive = +value
             }
         }
     },
     methods: {
+        initAMap() {
+            /**
+             * @description 初始化高德地图方法
+             * @return (void)
+             */
+            AMap.plugin('AMap.PlaceSearch', () => {
+                this.placeSearch = new AMap.PlaceSearch({
+                    type:
+                        '餐饮服务|购物服务|生活服务|住宿服务|公司企业|道路附属设施|地名地址信息|公共设施'
+                })
+            })
+        },
+        querySearch(queryString, cb) {
+            /**
+             * @description autocomplate 组件返回输入建议的方法
+             * @return (void)
+             *
+             * @queryString (string): 搜索字符串
+             * @cb (function): 搜索回调函数
+             */
+            this.placeSearch.search(queryString, (status, result) => {
+                cb(result.poiList.pois)
+            })
+        },
+        handleSelect(item) {
+            /**
+             * @descripton 选中推荐条目的回调函数
+             *  - 为地址和经纬度赋值
+             * @return (void)
+             */
+            this.address = item
+        },
         handleClick() {
             /**
              * @description 组件显示的按钮的点击事件的返回函数
@@ -153,10 +297,65 @@ export default {
             this.show = true
         },
         handleAvatarSuccess(response) {
+            /**
+             * @description 头像上传成功回调函数
+             * @retrun (void)
+             */
             this.store_avatar = response.data
         },
         handleAvatarRemove() {
+            /**
+             * @description 头像移除的回调函数
+             * @return (void)
+             */
             this.store_avatar = ''
+        },
+        handlePictureCardPreview(file) {
+            this.dialogImageUrl = file.url
+            this.previewImg = true
+        },
+        handlePosterSuccess(response) {
+            /**
+             * @description 海报上传成功回调函数
+             * @retrun (void)
+             */
+            this.poster = response.data
+        },
+        handlePosterRemove() {
+            /**
+             * @description 海报移除回调函数
+             * @return (void)
+             */
+            this.poster = ''
+        },
+        handleSubmit() {
+            /**
+             * @description 确认提交按钮点击事件的返回函数
+             * @return (void)
+             */
+            this.$refs.retailerForm.validate(valid => {
+                if (valid) {
+                    addMerchant(this.retailerForm).then(({ data }) => {
+                        console.log(data)
+                        debugger
+                    })
+                } else {
+                    this.$message({
+                        message: '请检查你的输入',
+                        type: 'error'
+                    })
+                }
+            })
+        },
+        handleCancel() {
+            /**
+             * @description 取消按钮点击事件的返回函数
+             * @return (void)
+             */
+            this.show = false
+        },
+        handleClosed() {
+            this.$refs.retailerForm.resetFields()
         }
     }
 }
@@ -169,6 +368,13 @@ export default {
         border-radius: 4px;
         & + section {
             margin-top: 15px;
+        }
+    }
+}
+.upload-disabled {
+    /deep/ {
+        .el-upload {
+            display: none;
         }
     }
 }

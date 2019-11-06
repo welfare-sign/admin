@@ -14,6 +14,7 @@ import {
 	FormItem,
 	Image,
 	Input,
+	InputNumber,
 	Select,
 	Option,
 	Upload,
@@ -23,6 +24,7 @@ import {
 	Checkbox,
 	CheckboxButton,
 	CheckboxGroup,
+	Autocomplete
 } from 'element-ui'
 
 Vue.use(Button)
@@ -39,6 +41,7 @@ Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Image)
 Vue.use(Input)
+Vue.use(InputNumber)
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(Upload)
@@ -46,6 +49,7 @@ Vue.use(Dialog)
 Vue.use(Checkbox)
 Vue.use(CheckboxButton)
 Vue.use(CheckboxGroup)
+Vue.use(Autocomplete)
 // Vue.use(MessageBox);
 // Vue.use(Message);
 

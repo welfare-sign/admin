@@ -58,7 +58,7 @@ _axios.interceptors.response.use(
 		if (data.status) {
 			return {
 				data: data.data,
-				res: response
+				res: data
 			}
 		} else {
 			Message({
@@ -75,7 +75,7 @@ _axios.interceptors.response.use(
 			}
 		}
 		// Do something with response data
-		return response
+		// return response
 	},
 	function(error) {
 		// Do something with response error
