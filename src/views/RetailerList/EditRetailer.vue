@@ -195,8 +195,8 @@ export default {
             retailerForm: {
                 address: this.editInfo.address || '',
                 catering_type: this.editInfo.catering_type || '',
-                checkin_days: this.editInfo.checkin_days || '',
-                checkin_num: this.editInfo.checkin_num || '',
+                checkin_days: this.editInfo.checkin_days || 5,
+                checkin_num: this.editInfo.checkin_num || 30,
                 contact_name: this.editInfo.contact_name || '',
                 contact_phone: this.editInfo.contact_phone || '',
                 lat: this.editInfo.lat || '',

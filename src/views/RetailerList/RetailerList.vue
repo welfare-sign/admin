@@ -20,7 +20,7 @@
             <el-table-column prop="received" label="礼包已发放"></el-table-column>
             <el-table-column label="操作" width="250" fixed="right">
                 <template slot-scope="scope">
-                    <!-- <edit-retailer :edit-info="scope.row" btn-title="编辑" btn-size="mini" /> -->
+                    <edit-retailer :edit-info="scope.row" btn-title="编辑" btn-size="mini" />
                     <el-button size="mini" type="warning" @click="handleDisable(scope.row.id)">禁用</el-button>
                     <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">删除</el-button>
                 </template>
