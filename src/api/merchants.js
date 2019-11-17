@@ -43,6 +43,9 @@ export function addMerchant (data) {
      *  @store_name *(string) 店名
      *  @total_receive *(number) 该店礼品一共可领取总数
      */
+    data = {
+        merchant: data
+    }
     return window.axios({
         url: 'v1/merchants',
         method: 'post',

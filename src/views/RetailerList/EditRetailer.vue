@@ -333,11 +333,12 @@ export default {
              * @description 确认提交按钮点击事件的返回函数
              * @return (void)
              */
+            const _this = this
             this.$refs.retailerForm.validate(valid => {
                 if (valid) {
                     addMerchant(this.retailerForm).then(({ data }) => {
-                        console.log(data)
-                        debugger
+                        _this.show = false
+                        _this.$emit('done')
                     })
                 } else {
                     this.$message({
@@ -362,6 +363,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .edit-retailer {
+    display: inline-block;
+    margin-right: 10px;
     section {
         padding: 12px;
         border: 1px dotted #cacaca;

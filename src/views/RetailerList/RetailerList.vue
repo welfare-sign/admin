@@ -4,7 +4,7 @@
             <el-input v-model="store_name" placeholder="请输入商户名进行搜索">
                 <el-button slot="append" @click="handleSearch">搜索</el-button>
             </el-input>
-            <edit-retailer />
+            <edit-retailer @done="queryList" />
         </header>
         <!-- <el-form class="header" inline>
             <el-form-item></el-form-item>
@@ -18,16 +18,15 @@
             <el-table-column prop="contact_phone" label="联系电话"></el-table-column>
             <el-table-column prop="create_at" label="上线日期"></el-table-column>
             <el-table-column prop="received" label="礼包已发放"></el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" width="250" fixed="right">
                 <template slot-scope="scope">
-                    <edit-retailer :edit-info="scope.row" btn-title="编辑" btn-size="mini" />
-                    <!-- <el-button size="mini" type="primary" @click="">编辑</el-button> -->
+                    <!-- <edit-retailer :edit-info="scope.row" btn-title="编辑" btn-size="mini" /> -->
                     <el-button size="mini" type="warning" @click="handleDisable(scope.row.id)">禁用</el-button>
                     <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination layout="prev, pager, next" :current-page="page_no" :page-size="page_size" :total="50" @current-change="currnetChange"></el-pagination>
+        <el-pagination layout="prev, pager, next" :current-page="page_no" :page-size="page_size" :total="total" @current-change="currnetChange"></el-pagination>
     </card>
 </template>
 <script>

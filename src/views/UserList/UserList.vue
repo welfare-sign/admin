@@ -8,12 +8,12 @@
             </el-form-item>
         </el-form>
         <el-table :data="list">
-            <el-table-column prop="name" label="昵称"></el-table-column>
+            <el-table-column prop="nickname" label="昵称"></el-table-column>
             <el-table-column prop="mobile" label="手机号"></el-table-column>
             <el-table-column prop="created_at" label="注册日期"></el-table-column>
             <el-table-column prop="last_checkin_time" label="最后签到"></el-table-column>
             <el-table-column prop label="剩余礼包"></el-table-column>
-            <el-table-column prop label="操作">
+            <el-table-column prop label="操作" width="160" fixed="right">
                 <template slot-scope="scope">
                     <el-button size="mini" type="warning" @click="handleDisable(scope.row.id)">禁用</el-button>
                     <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">删除</el-button>
