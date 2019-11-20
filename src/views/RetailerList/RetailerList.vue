@@ -18,9 +18,14 @@
             <el-table-column prop="contact_phone" label="联系电话"></el-table-column>
             <el-table-column prop="create_at" label="上线日期"></el-table-column>
             <el-table-column prop="received" label="礼包已发放"></el-table-column>
+            <el-table-column prop="status" label="商家状态">
+                <template slot-scope="scope">
+                    <span>{{scope.row.status === 'A' ? '启用' : '禁用'}}</span>
+                </template>
+            </el-table-column>
             <el-table-column label="操作" width="250" fixed="right">
                 <template slot-scope="scope">
-                    <edit-retailer :edit-info="scope.row" btn-title="编辑" btn-size="mini" />
+                    <edit-retailer :edit-info="scope.row" @done="queryList" btn-title="编辑" btn-size="mini" />
                     <el-button size="mini" type="warning" @click="handleDisable(scope.row.id)">禁用</el-button>
                     <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">删除</el-button>
                 </template>
@@ -39,7 +44,7 @@ import Card from '@/components/Card'
 import EditRetailer from './EditRetailer'
 
 // 接口
-import { queryMerchants } from '@/api/merchants'
+import { queryMerchants, del_merchant, disabled_merchant } from '@/api/merchants'
 
 export default {
     name: 'RetailerList',
@@ -98,22 +103,34 @@ export default {
             this.page_no = page_no
             this.queryList()
         },
-        handleDisable(id) {
+        handleDisable(merchant_id) {
             /**
              * @description 禁用商户方法
              * @return (void)
              * 
-             * @id (string): 商户 id
+             * @merchant_id (string): 商户 id
              */
-            // TODO
+            disabled_merchant({merchant_id}).then(() => {
+                this.$message({
+                    type: 'success',
+                    message: '商户禁用成功'
+                })
+                this.queryList()
+            })
         },
-        handleDelete(id) {
+        handleDelete(merchant_id) {
             /**
              * @description 删除商户方法
              * @return (void)
-             * @id (string): 商户 id
+             * @merchant_id (string): 商户 id
              */
-            // TODO
+            del_merchant({merchant_id}).then(()=> {
+                this.$message({
+                    type: 'success',
+                    message: '商户删除成功'
+                })
+                this.queryList()
+            })
         }
     }
 }

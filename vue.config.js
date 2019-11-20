@@ -1,7 +1,7 @@
 const path = require('path')
 module.exports = {
     devServer: {
-        proxy: 'http://47.100.29.191:18080/'
+        proxy: 'http://api.fuliqian.com/'
     },
 
     pluginOptions: {

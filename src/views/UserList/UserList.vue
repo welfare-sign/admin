@@ -38,7 +38,7 @@
 import Card from '@/components/Card'
 
 // 接口
-import { queryCustomers } from '@/api/customers'
+import { queryCustomers, del_customer, disabled_customer } from '@/api/customers'
 
 export default {
     name: 'UserList',
@@ -86,22 +86,34 @@ export default {
             this.page_no = page_no
             this.queryList()
         },
-        handleDisable(id) {
+        handleDisable(customer_id) {
             /**
              * @description 禁用用户方法
              * @return (void)
              *
-             * @id (string): 用户 id
+             * @customer_id (string): 用户 id
              */
-            // TODO
+            disabled_customer({customer_id}).then(() => {
+                this.$message({
+                    type: 'success',
+                    message: '用户删除成功'
+                })
+                this.queryList()
+            })
         },
-        handleDelete(id) {
+        handleDelete(customer_id) {
             /**
              * @description 删除用户方法
              * @return (void)
-             * @id (string): 用户 id
+             * @customer_id (string): 用户 id
              */
-            // TODO
+            del_customer({customer_id}).then(() => {
+                 this.$message({
+                    type: 'success',
+                    message: '用户禁用成功'
+                })
+                this.queryList()
+            })
         }
     }
 }

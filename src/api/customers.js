@@ -37,3 +37,33 @@ export function getCustomerDetail(params) {
 		params
 	})
 }
+
+export function del_customer(data) {
+	/**
+	 * @description 删除用户
+	 * @return (promise)
+	 * 
+	 * @data (object):
+	 * 	@customer_id (string): 用户id
+	 */
+	return window.axios({
+		url: 'v1/customers',
+		method: 'delete',
+		data
+	})
+}
+
+export function disabled_customer(data) {
+	/**
+	 * @description 禁用用户
+	 * @return (promse)
+	 * 
+	 * @data (object):
+	 * 	@customer_id (string): 用户id
+	 */
+	return window.axios({
+		url: 'v1/customers/disable',
+		method: 'post',
+		data
+	})
+}

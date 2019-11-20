@@ -1,7 +1,13 @@
 <template>
     <div class="edit-retailer">
         <el-button :type="btnType" :size="btnSize" @click="handleClick">{{btnTitle}}</el-button>
-        <el-dialog :title="title" :visible.sync="show" @closed="handleClosed" width="650px">
+        <el-dialog
+            :append-to-body="true"
+            :title="title"
+            :visible.sync="show"
+            @closed="handleClosed"
+            width="650px"
+        >
             <el-form
                 ref="retailerForm"
                 :rules="rules"
@@ -47,6 +53,7 @@
                             :action="uploadUrl+'&type=avatar'"
                             :multiple="false"
                             list-type="picture-card"
+                            :file-list="avatarFile"
                             :on-success="handleAvatarSuccess"
                             :on-preview="handlePictureCardPreview"
                             :on-remove="handleAvatarRemove"
@@ -60,6 +67,7 @@
                             :action="uploadUrl+'&type=poster'"
                             :multiple="false"
                             list-type="picture-card"
+                            :file-list="posterFile"
                             :on-success="handlePosterSuccess"
                             :on-preview="handlePictureCardPreview"
                             :on-remove="handlePosterRemove"
@@ -104,12 +112,12 @@
 import Cookies from 'js-cookie'
 
 // 接口
-import { addMerchant } from '@/api/merchants'
+import { addMerchant, edit_merchant } from '@/api/merchants'
 
 // 常量
 const baseUrl = process.env.VUE_APP_API || ''
 const access_token = Cookies.get('Authorization')
-
+const downloadUrl = `${baseUrl}v1/files/download`
 export default {
     name: 'EditRetailer',
     props: {
@@ -192,7 +200,22 @@ export default {
                     }
                 ]
             },
+            posterFile: this.editInfo.poster
+                ? [
+                      {
+                          url: `${downloadUrl}?filename=${this.editInfo.poster}&type=poster`
+                      }
+                  ]
+                : [],
+            avatarFile: this.editInfo.store_avatar
+                ? [
+                      {
+                          url: `${downloadUrl}?filename=${this.editInfo.store_avatar}&type=avatar`
+                      }
+                  ]
+                : [],
             retailerForm: {
+                id: this.editInfo.id,
                 address: this.editInfo.address || '',
                 catering_type: this.editInfo.catering_type || '',
                 checkin_days: this.editInfo.checkin_days || 5,
@@ -293,14 +316,14 @@ export default {
              * @description 组件显示的按钮的点击事件的返回函数
              * @return (void)
              */
-            // TODO
             this.show = true
         },
-        handleAvatarSuccess(response) {
+        handleAvatarSuccess(response, file) {
             /**
              * @description 头像上传成功回调函数
              * @retrun (void)
              */
+            this.avatarFile = [file]
             this.store_avatar = response.data
         },
         handleAvatarRemove() {
@@ -314,11 +337,12 @@ export default {
             this.dialogImageUrl = file.url
             this.previewImg = true
         },
-        handlePosterSuccess(response) {
+        handlePosterSuccess(response, file) {
             /**
              * @description 海报上传成功回调函数
              * @retrun (void)
              */
+            this.posterFile = [file]
             this.poster = response.data
         },
         handlePosterRemove() {
@@ -336,10 +360,17 @@ export default {
             const _this = this
             this.$refs.retailerForm.validate(valid => {
                 if (valid) {
-                    addMerchant(this.retailerForm).then(({ data }) => {
-                        _this.show = false
-                        _this.$emit('done')
-                    })
+                    if (_this.retailerForm.id) {
+                        edit_merchant(this.retailerForm).then(({ data }) => {
+                            _this.show = false
+                            _this.$emit('done')
+                        })
+                    } else {
+                        addMerchant(this.retailerForm).then(({ data }) => {
+                            _this.show = false
+                            _this.$emit('done')
+                        })
+                    }
                 } else {
                     this.$message({
                         message: '请检查你的输入',
@@ -357,6 +388,8 @@ export default {
         },
         handleClosed() {
             this.$refs.retailerForm.resetFields()
+            this.avatarFile = []
+            this.posterFile = []
         }
     }
 }
