@@ -20,7 +20,7 @@
  * @author 顾超<beyondc@foxmail.com>
  */
 // 依赖
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
 // 接口
 import { login } from '@/api/login'
 export default {
@@ -58,7 +58,8 @@ export default {
             this.validateForm().then(() => {
                 login(this.datas).then(({data, res}) => {
                     if (res.code === 'SUCCESS') {
-                        Cookies.set('Authorization', data)
+                        // Cookies.set('Authorization', data)
+                        sessionStorage.setItem('Authorization', data)
                         this.$router.push('/')
                     } else {
                         if (res.code === 'ERR_LOGIN') {

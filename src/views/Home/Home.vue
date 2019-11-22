@@ -10,14 +10,15 @@
 import Card from '@/components/Card'
 
 // 依赖
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
 export default {
     name: 'Home',
     components: {
         Card
     },
     created() {
-        const Authorization = Cookies.get('Authorization')
+        // const Authorization = Cookies.get('Authorization')
+        const Authorization = sessionStorage.getItem('Authorization')
         if (!Authorization) {
             this.$router.push({ name: 'login' })
         }

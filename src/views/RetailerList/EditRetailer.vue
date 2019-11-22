@@ -109,14 +109,15 @@
  * @author 顾超<beyondc@foxmail.com>
  */
 // 依赖
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
 
 // 接口
 import { addMerchant, edit_merchant } from '@/api/merchants'
 
 // 常量
 const baseUrl = process.env.VUE_APP_API || ''
-const access_token = Cookies.get('Authorization')
+// const access_token = Cookies.get('Authorization')
+const access_token = sessionStorage.getItem('Authorization')
 const downloadUrl = `${baseUrl}v1/files/download`
 export default {
     name: 'EditRetailer',
@@ -145,10 +146,18 @@ export default {
         }
     },
     data() {
+        const _this = this
         const checkPhone = (rule, value, callback) => {
             const regx = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/
             if (!regx.test(value)) {
                 callback(new Error('请输入正确的手机号'))
+            } else {
+                callback()
+            }
+        }
+        const checkAddress = (rule, value, callback) => {
+            if (!value || (!_this.retailerForm.lat && !_this.retailerForm.lon)) {
+                callback(new Error('请输入正确店家地址'))
             } else {
                 callback()
             }
@@ -165,8 +174,7 @@ export default {
             rules: {
                 address: [
                     {
-                        required: true,
-                        message: '请提供准确的地址',
+                        validator: checkAddress,
                         trigger: 'blur'
                     }
                 ],

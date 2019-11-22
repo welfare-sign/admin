@@ -10,7 +10,7 @@ import router from '@/router'
 import {Message} from 'element-ui'
 
 // 依赖
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
@@ -35,7 +35,8 @@ _axios.interceptors.request.use(
 		const url = config.url
 		const loginReg = /login$/
 		if (!loginReg.test(url)) {
-			const Authorization = Cookies.get('Authorization')
+			// const Authorization = Cookies.get('Authorization')
+			const Authorization = sessionStorage.getItem('Authorization')
 			if (!Authorization) {
 				router.push({name: 'login'})
 			} else {
