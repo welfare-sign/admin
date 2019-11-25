@@ -16,7 +16,7 @@
                         <el-button
                             size="mini"
                             v-if="scope.row.status === 'A'"
-                            type="default"
+                            type="warning"
                             @click="handleDisable(scope.row)"
                         >设为未签到</el-button>
                     </template>
