@@ -148,7 +148,8 @@ export default {
     data() {
         const _this = this
         const checkPhone = (rule, value, callback) => {
-            const regx = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/
+            // const regx = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/
+            const regx =  /^1[3456789]\d{9}$/
             if (!regx.test(value)) {
                 callback(new Error('请输入正确的手机号'))
             } else {
