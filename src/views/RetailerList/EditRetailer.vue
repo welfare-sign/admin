@@ -37,6 +37,16 @@
                         ></el-autocomplete>
                         <!-- <el-input v-model="address"></el-input> -->
                     </el-form-item>
+                    <!-- <el-form-item label="商户地址" prop="address">
+                        <el-autocomplete
+                            v-model="address"
+                            :fetch-suggestions="querySearch"
+                            value-key="address"
+                            placeholder="请输入地址"
+                            @select="handleSelect"
+                        ></el-autocomplete>
+                        <el-input v-model="address"></el-input>
+                    </el-form-item> -->
                     <el-form-item label="餐饮类型" prop="catering_type">
                         <el-select v-model="retailerForm.catering_type">
                             <el-option
@@ -170,6 +180,14 @@ export default {
                 {
                     code: 'bbq',
                     label: '烧烤'
+                },
+                {
+                    code: 'hot_pot',
+                    label: '火锅'
+                },
+                {
+                    code: 'other',
+                    label: '其它'
                 }
             ],
             rules: {
