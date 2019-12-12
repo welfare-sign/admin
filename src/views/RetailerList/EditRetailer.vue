@@ -476,5 +476,10 @@ export default {
     .el-autocomplete {
         width: 100%;
     }
+    .el-table {
+        .cell {
+            white-space: nowrap;
+        }
+    }
 }
 </style>

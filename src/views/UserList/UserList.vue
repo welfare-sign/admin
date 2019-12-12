@@ -8,10 +8,10 @@
             </el-form-item>
         </el-form>
         <el-table :data="list">
-            <el-table-column prop="nickname" min-width="150" label="昵称"></el-table-column>
-            <el-table-column prop="mobile" min-width="120" label="手机号"></el-table-column>
-            <el-table-column prop="created_at" min-width="300" :formatter="timeFormat" label="注册日期"></el-table-column>
-            <el-table-column prop="last_checkin_time" min-width="300" :formatter="timeFormat" label="最后签到"></el-table-column>
+            <el-table-column prop="nickname" min-width="120" label="昵称"></el-table-column>
+            <el-table-column prop="mobile" min-width="160" label="手机号"></el-table-column>
+            <el-table-column prop="created_at" min-width="160" :formatter="timeFormat" label="注册日期"></el-table-column>
+            <el-table-column prop="last_checkin_time" min-width="160" :formatter="timeFormat" label="最后签到"></el-table-column>
             <el-table-column prop label="剩余礼包"></el-table-column>
             <el-table-column prop label="操作" width="160" fixed="right">
                 <template slot-scope="scope">
@@ -136,10 +136,18 @@ export default {
     text-align: right;
 }
 /deep/ {
+    .el-form-item {
+        margin-bottom: 0;
+    }
     .el-pagination {
         position: absolute;
         bottom: 15px;
         right: 15px;
+    }
+    .el-table {
+        .cell {
+            white-space: nowrap;
+        }
     }
 }
 </style>

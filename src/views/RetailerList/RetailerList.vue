@@ -16,14 +16,14 @@
             <el-table-column prop="store_name" min-width="300" label="商户名"></el-table-column>
             <el-table-column prop="contact_name" label="联系人"></el-table-column>
             <el-table-column prop="contact_phone" min-width="120" label="联系电话"></el-table-column>
-            <el-table-column prop="create_at" min-width="200" :formatter="timeFormat" label="上线日期"></el-table-column>
+            <el-table-column prop="create_at" min-width="160" :formatter="timeFormat" label="上线日期"></el-table-column>
             <el-table-column prop="received" min-width="120" label="礼包已发放"></el-table-column>
             <el-table-column prop="status" min-width="120" label="商家状态">
                 <template slot-scope="scope">
                     <span>{{scope.row.status === 'A' ? '启用' : '禁用'}}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="250" fixed="right">
+            <el-table-column label="操作" width="220" fixed="right">
                 <template slot-scope="scope">
                     <edit-retailer :edit-info="scope.row" @done="queryList" btn-title="编辑" btn-size="mini" />
                     <el-button size="mini" type="warning" @click="handleDisable(scope.row.id)">禁用</el-button>
