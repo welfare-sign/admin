@@ -248,23 +248,23 @@ export default {
                       }
                   ]
                 : [],
-            retailerForm: {
-                id: this.editInfo.id,
-                location_address: this.editInfo.location_address || '',
-                address: this.editInfo.address || '',
-                catering_type: this.editInfo.catering_type || '',
-                checkin_days: this.editInfo.checkin_days || 5,
-                checkin_num: this.editInfo.checkin_num || 30,
-                contact_name: this.editInfo.contact_name || '',
-                contact_phone: this.editInfo.contact_phone || '',
-                lat: this.editInfo.lat || '',
-                lon: this.editInfo.lon || '',
-                poster: this.editInfo.poster || '',
-                received: this.editInfo.received || '',
-                store_avatar: this.editInfo.store_avatar || '',
-                store_name: this.editInfo.store_name || '',
-                total_receive: this.editInfo.total_receive || 0
-            },
+            fromModel: {
+                location_address: '',
+                address: '',
+                catering_type: '',
+                checkin_days: '',
+                checkin_num: '',
+                contact_name: '',
+                contact_phone: '',
+                lat: '',
+                lon: '',
+                poster: '',
+                received: '',
+                store_avatar: '',
+                store_name: '',
+                total_receive: ''
+            },   
+            retailerForm: {},
             placeSearch: null,
             previewImg: false,
             dialogImageUrl: ''
@@ -351,6 +351,27 @@ export default {
              * @description 组件显示的按钮的点击事件的返回函数
              * @return (void)
              */
+            if(this.editInfo.id) {
+                this.retailerForm = {
+                    id: this.editInfo.id,
+                    location_address: this.editInfo.location_address || '',
+                    address: this.editInfo.address || '',
+                    catering_type: this.editInfo.catering_type || '',
+                    checkin_days: this.editInfo.checkin_days || 5,
+                    checkin_num: this.editInfo.checkin_num || 30,
+                    contact_name: this.editInfo.contact_name || '',
+                    contact_phone: this.editInfo.contact_phone || '',
+                    lat: this.editInfo.lat || '',
+                    lon: this.editInfo.lon || '',
+                    poster: this.editInfo.poster || '',
+                    received: this.editInfo.received || '',
+                    store_avatar: this.editInfo.store_avatar || '',
+                    store_name: this.editInfo.store_name || '',
+                    total_receive: this.editInfo.total_receive || 0
+                }
+            } else {
+                this.retailerForm = this.fromModel
+            }
             this.show = true
         },
         handleAvatarSuccess(response, file) {
@@ -423,9 +444,10 @@ export default {
         },
         handleClosed() {
             this.$refs.retailerForm.resetFields()
+            this.retailerForm = this.fromModel
             this.avatarFile = []
             this.posterFile = []
-            this.$emit('done')
+            // this.$emit('done')
         }
     }
 }

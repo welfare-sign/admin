@@ -13,12 +13,12 @@
             </el-form-item>
         </el-form> -->
         <el-table :data="list">
-            <el-table-column prop="store_name" label="商户名"></el-table-column>
+            <el-table-column prop="store_name" min-width="300" label="商户名"></el-table-column>
             <el-table-column prop="contact_name" label="联系人"></el-table-column>
-            <el-table-column prop="contact_phone" label="联系电话"></el-table-column>
-            <el-table-column prop="create_at" label="上线日期"></el-table-column>
-            <el-table-column prop="received" label="礼包已发放"></el-table-column>
-            <el-table-column prop="status" label="商家状态">
+            <el-table-column prop="contact_phone" min-width="120" label="联系电话"></el-table-column>
+            <el-table-column prop="create_at" min-width="200" label="上线日期"></el-table-column>
+            <el-table-column prop="received" min-width="120" label="礼包已发放"></el-table-column>
+            <el-table-column prop="status" min-width="120" label="商家状态">
                 <template slot-scope="scope">
                     <span>{{scope.row.status === 'A' ? '启用' : '禁用'}}</span>
                 </template>
