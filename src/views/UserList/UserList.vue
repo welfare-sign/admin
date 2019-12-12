@@ -8,10 +8,10 @@
             </el-form-item>
         </el-form>
         <el-table :data="list">
-            <el-table-column prop="nickname" label="昵称"></el-table-column>
-            <el-table-column prop="mobile" label="手机号"></el-table-column>
-            <el-table-column prop="created_at" label="注册日期"></el-table-column>
-            <el-table-column prop="last_checkin_time" label="最后签到"></el-table-column>
+            <el-table-column prop="nickname" min-width="150" label="昵称"></el-table-column>
+            <el-table-column prop="mobile" min-width="120" label="手机号"></el-table-column>
+            <el-table-column prop="created_at" min-width="300" :formatter="timeFormat" label="注册日期"></el-table-column>
+            <el-table-column prop="last_checkin_time" min-width="300" :formatter="timeFormat" label="最后签到"></el-table-column>
             <el-table-column prop label="剩余礼包"></el-table-column>
             <el-table-column prop label="操作" width="160" fixed="right">
                 <template slot-scope="scope">
@@ -39,6 +39,9 @@ import Card from '@/components/Card'
 
 // 接口
 import { queryCustomers, del_customer, disabled_customer } from '@/api/customers'
+
+// 依赖
+import moment from 'moment'
 
 export default {
     name: 'UserList',
@@ -114,6 +117,13 @@ export default {
                 })
                 this.queryList()
             })
+        },
+        timeFormat(row, column, cellValue, index) {
+            let str
+            if (cellValue) {
+                str = moment(cellValue).format('YYYY-MM-DD HH:mm')
+            }
+           return str
         }
     }
 }

@@ -16,7 +16,7 @@
             <el-table-column prop="store_name" min-width="300" label="商户名"></el-table-column>
             <el-table-column prop="contact_name" label="联系人"></el-table-column>
             <el-table-column prop="contact_phone" min-width="120" label="联系电话"></el-table-column>
-            <el-table-column prop="create_at" min-width="200" label="上线日期"></el-table-column>
+            <el-table-column prop="create_at" min-width="200" :formatter="timeFormat" label="上线日期"></el-table-column>
             <el-table-column prop="received" min-width="120" label="礼包已发放"></el-table-column>
             <el-table-column prop="status" min-width="120" label="商家状态">
                 <template slot-scope="scope">
@@ -45,6 +45,9 @@ import EditRetailer from './EditRetailer'
 
 // 接口
 import { queryMerchants, del_merchant, disabled_merchant } from '@/api/merchants'
+
+// 依赖
+import moment from 'moment'
 
 export default {
     name: 'RetailerList',
@@ -131,6 +134,13 @@ export default {
                 })
                 this.queryList()
             })
+        },
+        timeFormat(row, column, cellValue, index) {
+            let str
+            if (cellValue) {
+                str = moment(cellValue).format('YYYY-MM-DD')
+            }
+           return str
         }
     }
 }
