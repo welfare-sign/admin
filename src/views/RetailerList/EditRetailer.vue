@@ -3,6 +3,7 @@
         <el-button :type="btnType" :size="btnSize" @click="handleClick">{{btnTitle}}</el-button>
         <el-dialog
             :append-to-body="true"
+            :close-on-click-modal="false"
             :title="title"
             :visible.sync="show"
             @closed="handleClosed"
@@ -14,7 +15,7 @@
                 :model="retailerForm"
                 :inline="false"
                 label-position="left"
-                label-width="100px"
+                label-width="120px"
             >
                 <section>
                     <h2>商户信息</h2>
@@ -27,26 +28,26 @@
                     <el-form-item label="联系人电话" prop="contact_phone">
                         <el-input v-model="retailerForm.contact_phone" placeholder="请输入联系人电话"></el-input>
                     </el-form-item>
-                    <el-form-item label="商户地址" prop="address">
+                    <el-form-item label="商户定位地址" prop="location_address">
                         <el-autocomplete
-                            v-model="address"
+                            v-model="location_address"
                             :fetch-suggestions="querySearch"
                             value-key="address"
-                            placeholder="请输入地址"
+                            placeholder="请输入定位地址"
                             @select="handleSelect"
                         ></el-autocomplete>
                         <!-- <el-input v-model="address"></el-input> -->
                     </el-form-item>
-                    <!-- <el-form-item label="商户地址" prop="address">
-                        <el-autocomplete
+                    <el-form-item label="商户详细地址" prop="address">
+                        <!-- <el-autocomplete
                             v-model="address"
                             :fetch-suggestions="querySearch"
                             value-key="address"
                             placeholder="请输入地址"
                             @select="handleSelect"
-                        ></el-autocomplete>
-                        <el-input v-model="address"></el-input>
-                    </el-form-item> -->
+                        ></el-autocomplete> -->
+                        <el-input v-model="retailerForm.address" placeholder="请输入详细地址"></el-input>
+                    </el-form-item>
                     <el-form-item label="餐饮类型" prop="catering_type">
                         <el-select v-model="retailerForm.catering_type">
                             <el-option
@@ -191,10 +192,16 @@ export default {
                 }
             ],
             rules: {
-                address: [
+                location_address: [
                     {
                         validator: checkAddress,
                         trigger: 'blur'
+                    }
+                ],
+                address: [
+                    {
+                        required: true,
+                        message: '请输入详细地址'
                     }
                 ],
                 contact_phone: [
@@ -243,6 +250,7 @@ export default {
                 : [],
             retailerForm: {
                 id: this.editInfo.id,
+                location_address: this.editInfo.location_address || '',
                 address: this.editInfo.address || '',
                 catering_type: this.editInfo.catering_type || '',
                 checkin_days: this.editInfo.checkin_days || 5,
@@ -282,13 +290,13 @@ export default {
                 this.retailerForm.poster = value
             }
         },
-        address: {
+        location_address: {
             get() {
-                return this.retailerForm.address
+                return this.retailerForm.location_address
             },
             set(value) {
                 if (typeof value === 'string') {
-                    this.retailerForm.address = value
+                    this.retailerForm.location_address = value
                 } else {
                     // this.retailerForm.address = value.address
                     this.retailerForm.lat = value.location.lat
@@ -336,7 +344,7 @@ export default {
              *  - 为地址和经纬度赋值
              * @return (void)
              */
-            this.address = item
+            this.location_address = item
         },
         handleClick() {
             /**
@@ -417,6 +425,7 @@ export default {
             this.$refs.retailerForm.resetFields()
             this.avatarFile = []
             this.posterFile = []
+            this.$emit('done')
         }
     }
 }
@@ -439,6 +448,11 @@ export default {
         .el-upload {
             display: none;
         }
+    }
+}
+/deep/ {
+    .el-autocomplete {
+        width: 100%;
     }
 }
 </style>
