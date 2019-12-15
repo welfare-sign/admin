@@ -24,7 +24,8 @@ import {
 	Checkbox,
 	CheckboxButton,
 	CheckboxGroup,
-	Autocomplete
+	Autocomplete,
+	DatePicker
 } from 'element-ui'
 
 Vue.use(Button)
@@ -50,6 +51,7 @@ Vue.use(Checkbox)
 Vue.use(CheckboxButton)
 Vue.use(CheckboxGroup)
 Vue.use(Autocomplete)
+Vue.use(DatePicker)
 // Vue.use(MessageBox);
 // Vue.use(Message);
 
